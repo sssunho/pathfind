@@ -156,6 +156,7 @@
     <ClInclude Include="pathFind.h" />
     <ClInclude Include="pathfinding.h" />
     <ClInclude Include="Resource.h" />
+    <ClInclude Include="sprite.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="UI.h" />
   </ItemGroup>
@@ -163,6 +164,7 @@
     <ClCompile Include="gameObject.cpp" />
     <ClCompile Include="pathFind.cpp" />
     <ClCompile Include="pathfinding.cpp" />
+    <ClCompile Include="sprite.cpp" />
     <ClCompile Include="UI.cpp" />
   </ItemGroup>
   <ItemGroup>

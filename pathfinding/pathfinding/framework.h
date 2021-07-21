@@ -13,6 +13,10 @@
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
+#pragma comment(lib, "msimg32.lib")
+#include <Ole2.h>
+#include <gdiplus.h>
+#pragma comment(lib, "gdiplus")
 
 #define WINDOWWIDTH 800
 #define WINDOWHEIGHT 800

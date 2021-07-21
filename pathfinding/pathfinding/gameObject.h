@@ -9,7 +9,11 @@ class GameObject
 {
 public:
 	POINT pos;
+	POINT vel;
 	GameObject(int x = 0, int y = 0) : pos(POINT({ x,y })) {}
+
+	virtual void draw(HDC& hdc) = 0;
+	virtual void update() = 0;
 };
 
 class Node
@@ -45,6 +49,11 @@ public:
 	{
 		return g + h == p.g + p.h ? g < p.g: g + h < p.g + p.h;
 	}
+};
+
+class Actor : public GameObject
+{
+
 };
 
 void initMap();
