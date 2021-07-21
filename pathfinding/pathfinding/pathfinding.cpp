@@ -140,6 +140,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		SetTimer(hWnd, 1, 100, 0);
 		SetClientSize(hWnd, WINDOWWIDTH, WINDOWHEIGHT);
 		initMap();
+		initBrush();
 		break;
     case WM_COMMAND:
         {
@@ -164,7 +165,13 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		clickNode(p);
 		break;
 	}
+
+	case WM_RBUTTONDOWN:
+	{
+		POINT p = toLocalSpace(POINT({ LOWORD(lParam), HIWORD(lParam) }));
+		blockNode(p);
 		break;
+	}
 	case WM_TIMER:
 		render();
 		break;
@@ -179,6 +186,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
     case WM_DESTROY:
 		KillTimer(hWnd, 1);
 		releaseMap();
+		releaseBrush();
         PostQuitMessage(0);
         break;
     default:
