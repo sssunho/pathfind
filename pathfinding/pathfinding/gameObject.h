@@ -1,64 +1,48 @@
 #ifndef __GAMEOBJ__
 #define __GAMEOBJ__
 
+#include "sprite.h"
 #include "framework.h"
 #include "UI.h"
 #include <vector>
+
+enum class DIRECTION { NONE = 0, D = 1, R = 2, RD = 3, U = 4, RU = 6, L = 8, LD = 9, LU = 12 };
+enum class ActorState { IDLE, ONMOVE };
 
 class GameObject
 {
 public:
 	POINT pos;
 	POINT vel;
-	GameObject(int x = 0, int y = 0) : pos(POINT({ x,y })) {}
+	GameObject(int x = 0, int y = 0, int vx = 0, int vy = 0) : pos(POINT({ x,y })), vel(POINT({ vx,vy })) {}
 
 	virtual void draw(HDC& hdc) = 0;
 	virtual void update() = 0;
 };
 
-class Node
-{
-private:
-	POINT pos;
-	int g;
-	int h;
-	bool block;
-	Node* prev;
-	BRUSHCOLOR color;
-
-public:
-	Node(POINT pos = { 0, 0 }, int g = 0, int h = 0, bool block = false, Node* prev = NULL) : pos(pos), g(g), h(h), block(block), prev(prev), color(WHITE) {}
-	void draw(HDC& hdc);
-	int getG() { return g; }
-	int getH() { return h; }
-	int getF() { return g + h; }
-	POINT getPos() { return pos; }
-	Node* getPrev() { return prev; }
-	void setG(int _g) { g = _g; }
-	void setH(int _h) { h = _h; }
-	void setPrev(Node* node) { prev = node; }
-	bool isBlock() { return block; }
-	void toggleBlock() { block = !block; }
-
-	bool operator<(Node p)
-	{
-		return g + h == p.g + p.h ? g > p.g: g + h > p.g + p.h;
-	}
-
-	bool operator>(Node p)
-	{
-		return g + h == p.g + p.h ? g < p.g: g + h < p.g + p.h;
-	}
-};
-
 class Actor : public GameObject
 {
+private:
+	DIRECTION dir;
+	ActorState state;
+	Sprite sprite;
+
+public:
+	Actor(int x = 0, int y = 0, DIRECTION dir = DIRECTION::D, const WCHAR* filename = NULL) : GameObject(x, y), dir(DIRECTION::D), state(ActorState::IDLE), sprite(filename, 0, 0, 3, 8) { sprite.setRepeat(true); sprite.setFrame(1); }
+
+	void setDirection(DIRECTION dir);
+	DIRECTION getDirection() { return dir; }
+
+	void setState(ActorState st);
+	ActorState getState() { return state; }
+
+	virtual void draw(HDC& hdc);
+	virtual void update();
 
 };
 
-void initMap();
-
-void releaseMap();
-
-
 #endif
+
+void initObject();
+
+void releaseObject();

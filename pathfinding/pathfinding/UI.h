@@ -12,6 +12,9 @@ using std::stack;
 using std::vector;
 
 enum BRUSHCOLOR {WHITE, GRAY, BLUE, GREEN, RED};
+enum class DIRECTION;
+class Node;
+class Actor;
 
 void initBrush();
 
@@ -30,5 +33,11 @@ void SetClientSize(const HWND hWnd, int nDestClientWidth = 800, int nDestClientH
 POINT toLocalSpace(POINT p);
 
 POINT toGlobalSpace(POINT p);
+
+DIRECTION getDirectionKeyState();
+
+void trackingPath(Actor * obj, stack<POINT>& path);
+
+stack<POINT> getPath(POINT p);
 
 #endif

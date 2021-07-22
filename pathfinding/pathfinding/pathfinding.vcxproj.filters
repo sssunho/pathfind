@@ -39,6 +39,15 @@
     <ClInclude Include="sprite.h">
       <Filter>헤더 파일</Filter>
     </ClInclude>
+    <ClInclude Include="controlTime.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="map.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
+    <ClInclude Include="intVector.h">
+      <Filter>헤더 파일</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="pathfinding.cpp">
@@ -54,6 +63,15 @@
       <Filter>소스 파일</Filter>
     </ClCompile>
     <ClCompile Include="sprite.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="controlTime.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="map.cpp">
+      <Filter>소스 파일</Filter>
+    </ClCompile>
+    <ClCompile Include="intVector.cpp">
       <Filter>소스 파일</Filter>
     </ClCompile>
   </ItemGroup>

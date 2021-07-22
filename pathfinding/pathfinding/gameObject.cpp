@@ -1,42 +1,88 @@
 #include "gameObject.h"
+#include <list>
 
-using std::vector;
-vector<vector<Node*>> map;
-extern vector<HBRUSH> brushes;
+using std::list;
+Actor* marill;
 
-void initMap()
+list<GameObject*> objList;
+
+void initObject()
 {
-	map = vector<vector<Node*>>(WINDOWHEIGHT / UNITSIZE, vector<Node*>(WINDOWWIDTH / UNITSIZE, NULL));
-
-	for (int i = 0; i < map.size(); i++)
-		for (int j = 0; j < map[0].size(); j++)
-			map[i][j] = new Node(POINT({ j, i }));
+	marill = new Actor(100, 100, DIRECTION::D, L"images\\marill.png");
+	objList.push_back(marill);
 }
 
-void releaseMap()
+void releaseObject()
 {
-	for (int i = 0; i < map.size(); i++)
-		for (int j = 0; j < map[0].size(); j++)
-			delete map[i][j];
+	for (list<GameObject*>::iterator it = objList.begin(); it != objList.end(); it++)
+		delete (*it);
+
+	objList.clear();
 }
 
-void Node::draw(HDC& hdc)
+void Actor::setState(ActorState st)
 {
-	POINT p = toGlobalSpace(pos);
-	RECT rt = { p.x - UNITSIZE / 2, p.y - UNITSIZE / 2, p.x + UNITSIZE / 2 , p.y + UNITSIZE / 2};
-	WCHAR str[32];
-	HBRUSH oldBrush;
-	if (block)
+	switch (state)
 	{
-		oldBrush = (HBRUSH)SelectObject(hdc, brushes[GRAY]);
-		Rectangle(hdc, rt.left, rt.top, rt.right, rt.bottom);
-		SelectObject(hdc, oldBrush);
-		return;
+	case ActorState::IDLE:
+		if (st == ActorState::ONMOVE)
+		{
+			sprite.play();
+		}
+	break;
+
+	case ActorState::ONMOVE:
+		if (st == ActorState::IDLE)
+		{
+			sprite.pause();
+			sprite.setFrame(1);
+		}
+	break;
 	}
-	oldBrush = (HBRUSH)SelectObject(hdc, brushes[color]);
-	Rectangle(hdc, rt.left, rt.top, rt.right, rt.bottom);
-	SelectObject(hdc, oldBrush);
-	swprintf_s(str, 32, L"%d\n%d %d\n", g + h, g, h);
-	OffsetRect(&rt, 0, 5);
-	DrawTextW(hdc, str, wcslen(str), &rt, DT_VCENTER | DT_CENTER);
+
+	state = st;
+}
+
+void Actor::draw(HDC& hdc)
+{
+	sprite.draw(hdc, pos.x, pos.y);
+}
+
+void Actor::update()
+{
+	pos.x += vel.x;
+	pos.y += vel.y;
+}
+
+void Actor::setDirection(DIRECTION dir)
+{
+	switch (dir)
+	{
+	case DIRECTION::D:
+		sprite.setYOffset(0);
+		break;
+	case DIRECTION::L:
+		sprite.setYOffset(1);
+		break;
+	case DIRECTION::R:
+		sprite.setYOffset(2);
+		break;
+	case DIRECTION::U:
+		sprite.setYOffset(3);
+		break;
+	case DIRECTION::LU:
+		sprite.setYOffset(4);
+		break;
+	case DIRECTION::RU:
+		sprite.setYOffset(5);
+		break;
+	case DIRECTION::LD:
+		sprite.setYOffset(6);
+		break;
+	case DIRECTION::RD:
+		sprite.setYOffset(7);
+		break;
+	}
+
+	Actor::dir = dir;
 }

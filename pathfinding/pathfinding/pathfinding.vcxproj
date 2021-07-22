@@ -151,8 +151,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="controlTime.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="gameObject.h" />
+    <ClInclude Include="intVector.h" />
+    <ClInclude Include="map.h" />
     <ClInclude Include="pathFind.h" />
     <ClInclude Include="pathfinding.h" />
     <ClInclude Include="Resource.h" />
@@ -161,7 +164,10 @@
     <ClInclude Include="UI.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="controlTime.cpp" />
     <ClCompile Include="gameObject.cpp" />
+    <ClCompile Include="intVector.cpp" />
+    <ClCompile Include="map.cpp" />
     <ClCompile Include="pathFind.cpp" />
     <ClCompile Include="pathfinding.cpp" />
     <ClCompile Include="sprite.cpp" />

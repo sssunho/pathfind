@@ -1,7 +1,8 @@
 #include "pathFind.h"
 #include "gameObject.h"
+#include "map.h"
 
-stack<Node*> path;
+stack<POINT> path;
 vector<vector<bool>> visit;
 vector<vector<bool>> open;
 extern vector<vector<Node*>> map;
@@ -88,7 +89,6 @@ int getDistance(POINT p1, POINT p2)
 	int bx = abs(p1.x - p2.x);
 	int by = abs(p1.y - p2.y);
 	return bx > by ? by * 14 + (bx - by) * 10 : bx * 14 + (by - bx) * 10;
-	return 0;
 }
 
 void sortAgain()

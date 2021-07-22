@@ -1,15 +1,23 @@
 #include "UI.h"
 #include "gameObject.h"
 #include "pathFind.h"
+#include "map.h"
+#include "intVector.h"
+#include <list>
 
 extern HWND ghWnd;
+
+using std::list;
 
 bool toggleSelect = false;
 POINT start = { -1, -1 };
 POINT end = { -1, -1 };
 
-extern stack<Node*> path;
+extern stack<POINT> path;
 extern vector<vector<Node*>> map;
+extern list<GameObject*> objList;
+extern Actor* marill;
+
 vector<HBRUSH> brushes;
 Node* dest = NULL;
 
@@ -38,6 +46,10 @@ void clickNode(POINT pos)
 			return;
 		end = pos;
 		dest = findPath(start, end);
+		path = getPath(dest->getPos());
+		marill->pos = toGlobalSpace( start);
+		if(!path.empty())
+			marill->setState(ActorState::ONMOVE);
 	}
 	else
 	{
@@ -87,6 +99,15 @@ void render()
 		SelectObject(buffer, oldBrush);
 	}
 
+	for (list<GameObject*>::iterator it = objList.begin(); it != objList.end(); it++)
+		(*it)->draw(buffer);
+
+	if (!path.empty())
+	{
+		trackingPath(marill, path);
+	}
+
+	marill->update();
 
 	BitBlt(hdc, 0, 0, WINDOWWIDTH, WINDOWHEIGHT, buffer, 0, 0, SRCCOPY);
 
@@ -157,4 +178,63 @@ POINT toLocalSpace(POINT p)
 POINT toGlobalSpace(POINT p)
 {
 	return POINT({ p.x * UNITSIZE + UNITSIZE / 2, p.y * UNITSIZE + UNITSIZE / 2 });
+}
+
+DIRECTION getDirectionKeyState()
+{
+	int l = 8 * ((GetAsyncKeyState(VK_LEFT) & 0x8001) > 0);
+	int r = 2 * ((GetAsyncKeyState(VK_RIGHT) & 0x8001) > 0);
+	int u = 4 * ((GetAsyncKeyState(VK_UP) & 0x8001) > 0);
+	int d = 1 * ((GetAsyncKeyState(VK_DOWN) & 0x8001) > 0);
+
+	return DIRECTION(l | r | u | d);
+}
+
+void trackingPath(Actor* obj, stack<POINT>& path)
+{
+	if (obj->pos == path.top())
+	{
+		POINT localDest;
+		path.pop();
+		if (path.empty())
+		{
+			obj->vel = { 0,0 };
+			obj->setState(ActorState::IDLE);
+			return;
+		}
+		localDest = path.top();
+		POINT d = localDest - obj->pos;
+		obj->vel.x = d.x > 0 ? 10 : d.x < 0 ? -10 : 0;
+		obj->vel.y = d.y > 0 ? 10 : d.y < 0 ? -10 : 0;
+
+		DIRECTION dir;
+		if (obj->vel.x > 0)
+		{
+			dir = obj->vel.y == 0 ? DIRECTION::R : obj->vel.y > 0 ? DIRECTION::RD : DIRECTION::RU;
+		}
+		else if (obj->vel.x < 0)
+		{
+			dir = obj->vel.y == 0 ? DIRECTION::L : obj->vel.y > 0 ? DIRECTION::LD : DIRECTION::LU;
+		}
+		else
+		{
+			dir = obj->vel.y == 0 ? DIRECTION::NONE : obj->vel.y > 0 ? DIRECTION::D : DIRECTION::U;
+		}
+
+		obj->setDirection(dir);
+
+	}
+}
+
+stack<POINT> getPath(POINT p)
+{
+	stack<POINT> temp;
+	Node* ptr = map[p.y][p.x];
+	while (ptr != NULL)
+	{
+		temp.push(toGlobalSpace(ptr->getPos()));
+		ptr = ptr->getPrev();
+	}
+
+	return temp;
 }

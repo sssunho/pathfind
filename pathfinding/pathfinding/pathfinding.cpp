@@ -5,6 +5,7 @@
 #include "pathfinding.h"
 #include "UI.h"
 #include "gameObject.h"
+#include "map.h"
 #include <vector>
 
 using std::vector;
@@ -19,7 +20,9 @@ extern vector<vector<Node*>> map;
 HINSTANCE hInst;                                // 현재 인스턴스입니다.
 WCHAR szTitle[MAX_LOADSTRING];                  // 제목 표시줄 텍스트입니다.
 WCHAR szWindowClass[MAX_LOADSTRING];            // 기본 창 클래스 이름입니다.
-HWND ghWnd;
+HWND ghWnd; 
+
+extern Actor* marill;
 
 // 이 코드 모듈에 포함된 함수의 선언을 전달합니다:
 ATOM                MyRegisterClass(HINSTANCE hInstance);
@@ -56,6 +59,10 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,
     HACCEL hAccelTable = LoadAccelerators(hInstance, MAKEINTRESOURCE(IDC_PATHFINDING));
 
     MSG msg;
+
+	initMap();
+	initBrush();
+	initObject();
 
     // 기본 메시지 루프입니다:
     while (GetMessage(&msg, nullptr, 0, 0))
@@ -147,8 +154,6 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_CREATE:
 		SetTimer(hWnd, 1, 100, 0);
 		SetClientSize(hWnd, WINDOWWIDTH, WINDOWHEIGHT);
-		initMap();
-		initBrush();
 		break;
     case WM_COMMAND:
         {
@@ -183,6 +188,25 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 	case WM_TIMER:
 		render();
 		break;
+		/*
+
+	case WM_KEYDOWN:
+		if (GetAsyncKeyState(VK_SPACE) & 0x8001)
+		{
+			switch (marill->getState())
+			{
+			case ActorState::IDLE:
+				marill->setState(ActorState::ONMOVE);
+				break;
+			case ActorState::ONMOVE:
+				marill->setState(ActorState::IDLE);
+				break;
+			}
+		}
+		else
+			marill->setDirection(getDirectionKeyState());
+	break;*/
+
     case WM_PAINT:
         {
             PAINTSTRUCT ps;
@@ -195,6 +219,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 		KillTimer(hWnd, 1);
 		releaseMap();
 		releaseBrush();
+		releaseObject();
         PostQuitMessage(0);
         break;
     default:

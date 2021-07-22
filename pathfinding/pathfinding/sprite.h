@@ -1,6 +1,7 @@
 #ifndef __SPRITE__
 #define __SPRITE__
 #include "framework.h"
+#include "controlTime.h"
 #include <fstream>
 
 using std::wfstream;
@@ -16,26 +17,35 @@ protected:
 	int cy;
 	int bx;
 	int by;
+	int nx;
+	int ny;
+	TIMER time;
+	int delay;
+	int frame;
+	bool playing;
+	bool repeat;
+	void updateFrame();
 
 public:
-	Sprite(WCHAR* file, int cx, int cy, int bx, int by);
-	void draw(HDC hdc, int x, int y);
+	Sprite(const WCHAR* file = NULL, int cx = 0, int cy = 0, int nx = 1, int ny = 1);
+	virtual void draw(HDC& hdc, int x, int y);
 	int getWidth() { return img->GetWidth(); }
 	int getHeigth() { return img->GetHeight(); }
+
 	void setSprite(int cx, int cy, int bx, int by) { Sprite::cx = cx; Sprite::cy = cy, Sprite::bx = bx; Sprite::by = by; }
-	void setImage(WCHAR* file);
+	void setImage(const WCHAR* file);
+
+	void setXOffset(int n) { cx = bx * n; }
+	void setYOffset(int n) { cy = by * n; }
+
+	void setFrame(int n) { frame = n; }
+
+	void play() { playing = true; }
+	void pause() { playing = false; }
+
+	void setRepeat(bool flag) { repeat = flag; }
+
 	~Sprite() { if (img != NULL) delete img; }
-};
-
-class Animation : public Sprite
-{
-private:
-	bool open;
-	wfstream script;
-
-public:
-	Animation(WCHAR* path);
-	~Animation() { if (script.is_open()) script.close(); }
 };
 
 #endif
