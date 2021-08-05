@@ -18,6 +18,14 @@ void selectNode(POINT pos, POINT end);
 
 void updateNode(POINT pos, POINT end, POINT prev);
 
+Node * findPath_(POINT start, POINT end, int size);
+
+void selectNode_(POINT pos, POINT end, int size);
+
+void updateNode_(POINT pos, POINT end, POINT prev, int size);
+
+bool blockCheck(POINT pos, int size);
+
 int getDistance(POINT p1, POINT p2);
 
 void sortAgain();

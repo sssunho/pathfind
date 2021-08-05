@@ -4,7 +4,7 @@
 #include "framework.h"
 #include <stack>
 #include <vector>
-#define UNITSIZE 40
+#define UNITSIZE 30
 #define NX WINDOWWIDTH / UNITSIZE
 #define NY WINDOWHEIGHT / UNITSIZE
 

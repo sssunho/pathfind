@@ -22,6 +22,7 @@ protected:
 	TIMER time;
 	int delay;
 	int frame;
+	int startFrame;
 	bool playing;
 	bool repeat;
 	void updateFrame();
@@ -39,6 +40,9 @@ public:
 	void setYOffset(int n) { cy = by * n; }
 
 	void setFrame(int n) { frame = n; }
+	void setStartFrame(int n) { startFrame = n; }
+
+	void setDelay(int n) { delay = n; }
 
 	void play() { playing = true; }
 	void pause() { playing = false; }

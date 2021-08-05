@@ -1,7 +1,7 @@
 #include "sprite.h"
 
 Sprite::Sprite(const WCHAR* file, int cx, int cy, int nx, int ny) 
-	: cx(cx), cy(cy), nx(nx), ny(ny), time(), delay(50), frame(0), playing(false), repeat(false)
+	: cx(cx), cy(cy), nx(nx), ny(ny), time(), delay(50), frame(0), startFrame(0), playing(false), repeat(false)
 {
 	if (nx <= 0)
 		nx = 1;
@@ -45,7 +45,8 @@ void Sprite::draw(HDC& hdc, int x, int y)
 		return;
 
 	Graphics g(hdc);
-	g.DrawImage(img, x - bx/2, y - by/2, cx + frame * bx, cy, bx, by, UnitPixel);
+	Rect dest = { x - bx / 2, y - by / 2, bx, by };
+	g.DrawImage(img, dest, cx + frame * bx, cy, bx, by, UnitPixel);
 	if (playing)
 		updateFrame();
 }
@@ -58,7 +59,7 @@ void Sprite::updateFrame()
 		frame++;
 		if (frame >= nx)
 		{
-			frame = 0;
+			frame = startFrame;
 			if (!repeat)
 				playing = false;
 		}

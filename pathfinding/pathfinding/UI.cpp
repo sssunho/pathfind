@@ -3,6 +3,7 @@
 #include "pathFind.h"
 #include "map.h"
 #include "intVector.h"
+#include "sprite.h"
 #include <list>
 
 extern HWND ghWnd;
@@ -17,6 +18,7 @@ extern stack<POINT> path;
 extern vector<vector<Node*>> map;
 extern list<GameObject*> objList;
 extern Actor* marill;
+extern Actor* ac;
 
 vector<HBRUSH> brushes;
 Node* dest = NULL;
@@ -45,7 +47,7 @@ void clickNode(POINT pos)
 		if (start.x == pos.x && start.y == pos.y)
 			return;
 		end = pos;
-		dest = findPath(start, end);
+		dest = findPath_(start, end, 2);
 		path = getPath(dest->getPos());
 		marill->pos = toGlobalSpace( start);
 		if(!path.empty())
@@ -72,6 +74,13 @@ void render()
 	HDC buffer = CreateCompatibleDC(hdc);	
 	HBITMAP bitmap = CreateCompatibleBitmap(hdc, WINDOWWIDTH, WINDOWHEIGHT);
 	HBRUSH oldBrush;
+
+	static Sprite test(L"images\\charTemplate.png", 0, 0, 5, 27);
+	test.setDelay(150);
+	test.setYOffset(4);
+	test.setStartFrame(1);
+	test.play();
+	test.setRepeat(true);
 
 	SelectObject(buffer, bitmap);
 
@@ -107,6 +116,10 @@ void render()
 		trackingPath(marill, path);
 	}
 
+	test.draw(buffer, 300, 300);
+	int i = 0;
+	i = test.getWidth();
+	i = test.getHeigth();
 	marill->update();
 
 	BitBlt(hdc, 0, 0, WINDOWWIDTH, WINDOWHEIGHT, buffer, 0, 0, SRCCOPY);
